@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
 import { withNavigationItem } from 'hybrid-navigation'
 
@@ -8,9 +8,14 @@ function createMultiRootStateHook<S>(initialState: S) {
 
   return () => {
     const [state, setState] = useState(data)
+    const previous = useRef(state)
+    previous.current = state
+
     useEffect(() => {
       const callback = (state: S) => {
-        setState(state)
+        if (previous.current !== state) {
+          setState(state)
+        }
       }
       callbacks.push(callback)
 
@@ -24,7 +29,7 @@ function createMultiRootStateHook<S>(initialState: S) {
 
     useEffect(() => {
       data = state
-      callbacks.forEach(c => c(state))
+      callbacks.forEach(cb => cb(state))
     }, [state])
 
     return [state, setState] as const
