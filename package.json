@@ -1,0 +1,59 @@
+{
+  "name": "ContextDemo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start --reset-cache",
+    "test": "jest",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && tsc",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "eslint . --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "react": "17.0.1",
+    "react-native": "^0.64.0",
+    "react-native-fast-image": "^8.1.5",
+    "hybrid-navigation": "^1.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/runtime": "^7.13.10",
+    "@gfez/eslint-config-react-native": "^1.0.0",
+    "@types/jest": "^26.0.21",
+    "@types/react": "^17.0.1",
+    "@types/react-native": "^0.64.0",
+    "@types/react-test-renderer": "17.0.1",
+    "babel-jest": "^26.6.3",
+    "husky": "^4.2.5",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.2.2",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "react-native-testing-library": "^6.0.0",
+    "react-test-renderer": "17.0.1",
+    "typescript": "^3.7.3"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
