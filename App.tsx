@@ -1,75 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
+import React, { useContext } from 'react'
+import { View, Text, Button, StyleSheet } from 'react-native'
 import { withNavigationItem } from 'hybrid-navigation'
-
-function createMultiRootStateHook<S>(initialState: S) {
-  const callbacks: Array<(state: S) => void> = []
-  let data = initialState
-
-  return () => {
-    const [state, setState] = useState(data)
-    const previous = useRef(state)
-    previous.current = state
-
-    useEffect(() => {
-      const callback = (state: S) => {
-        if (previous.current !== state) {
-          setState(state)
-        }
-      }
-      callbacks.push(callback)
-
-      return () => {
-        const index = callbacks.indexOf(callback)
-        if (index !== -1) {
-          callbacks.splice(index, 1)
-        }
-      }
-    }, [])
-
-    useEffect(() => {
-      data = state
-      callbacks.forEach(cb => cb(state))
-    }, [state])
-
-    return [state, setState] as const
-  }
-}
-
-const themes = {
-  light: {
-    foreground: '#000000',
-    background: '#eeeeee',
-  },
-  dark: {
-    foreground: '#ffffff',
-    background: '#222222',
-  },
-}
-
-const ThemeContext = React.createContext({ theme: themes.light, toggleTheme: () => {} })
-
-const useThemeState = createMultiRootStateHook(themes.light)
-
-function withThemeContext(WrappedComponent: React.ComponentType<any>) {
-  return (props: any) => {
-    const [theme, setTheme] = useThemeState()
-    console.log('--', theme)
-
-    return (
-      <ThemeContext.Provider
-        value={{
-          theme,
-          toggleTheme: () => {
-            console.log('toggle', theme === themes.dark)
-            setTheme(theme === themes.dark ? themes.light : themes.dark)
-          },
-        }}>
-        <WrappedComponent {...props} />
-      </ThemeContext.Provider>
-    )
-  }
-}
+import { ThemeContext, withThemeContext } from './ThemeContext'
 
 function Welcome() {
   const { theme } = useContext(ThemeContext)
@@ -77,13 +9,11 @@ function Welcome() {
 }
 
 function App() {
-  const [text, setText] = useState('')
   const { toggleTheme } = useContext(ThemeContext)
-  console.log(`------------`)
+  console.log(`--------------`)
   return (
     <View style={styles.container}>
       <Welcome />
-      <TextInput value={text} onChangeText={setText} style={styles.input} />
       <Button title="确定" onPress={toggleTheme} />
     </View>
   )
