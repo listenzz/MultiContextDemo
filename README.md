@@ -29,3 +29,24 @@
   ```ts
   ReactRegistry.registerComponent('App', () => withThemeContext(App))
   ```
+
+当使用最后这种方法时，HOC 请务必转发 `navigationItem`
+
+如下所示
+
+```tsx
+export function withThemeContext(WrappedComponent: React.ComponentType<any>) {
+  const FC = (props: any) => {
+    return (
+      <ThemeContext.Provider>
+        <WrappedComponent {...props} />
+      </ThemeContext.Provider>
+    )
+  }
+
+  // 请务必传递 navigationItem
+  FC.navigationItem = WrappedComponent.navigationItem
+
+  return FC
+}
+```
